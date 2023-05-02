@@ -1,0 +1,29 @@
+version: '3.8'
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  postgres:
+    image: postgres
+    container_name: hospital-postgres
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: laravel_docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5479:5432'
+
+  php:
+    container_name: hospital-php
+    build:
+      context: ./php
+    ports:
+      - '8097:80'
+    volumes:
+      - ./src:/var/www/src
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - postgres
