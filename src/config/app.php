@@ -182,6 +182,7 @@ return [
          */
         \App\Repositories\Doctor\DoctorRepositoryServiceProvider::class,
         \App\Repositories\Patient\PatientRepositoryServiceProvider::class,
+        \App\Repositories\Appointment\AppointmentRepositoryServiceProvider::class,
     ],
 
     /*
