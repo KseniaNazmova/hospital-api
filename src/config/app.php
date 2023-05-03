@@ -176,6 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+
+        \Tests\Unit\Repositories\Doctor\DoctorRepositoryServiceProvider::class,
     ],
 
     /*

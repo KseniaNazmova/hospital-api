@@ -9,10 +9,12 @@ services:
     image: postgres
     container_name: hospital-postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: laravel_docker
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.d/:/docker-entrypoint-initdb.d/
     ports:
       - '5479:5432'
 
