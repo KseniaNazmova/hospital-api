@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Repositories\Doctor;
+namespace App\Repositories\Doctor;
 
 use App\Contracts\Repositories\DoctorRepositoryContract;
 use App\Entities\Doctor\Doctor;

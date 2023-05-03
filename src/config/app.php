@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -177,7 +177,11 @@ return [
 
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
 
-        \Tests\Unit\Repositories\Doctor\DoctorRepositoryServiceProvider::class,
+        /*
+         * Repositories
+         */
+        \App\Repositories\Doctor\DoctorRepositoryServiceProvider::class,
+        \App\Repositories\Patient\PatientRepositoryServiceProvider::class,
     ],
 
     /*
