@@ -1,0 +1,9 @@
+POST http://localhost:8097/api/patients
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "snils": "1234567890",
+  "birthDate": "2005-08-15T15:52:01+00:00",
+  "residence": "2000-01-01"
+}

@@ -2,10 +2,11 @@
 
 namespace App\Transformers;
 
-use App\Dto\Doctor\Repository\DoctorDto;
 use App\Dto\Patient\Repository\PatientDto;
-use App\Entities\Doctor\Doctor;
+use App\Dto\Patient\Repository\PatientRepositoryCreateDto;
 use App\Entities\Patient\Patient;
+use DateTime;
+use Illuminate\Support\Arr;
 
 class PatientTransformer
 {
@@ -21,6 +22,22 @@ class PatientTransformer
             $entity->getMiddleName(),
             $entity->getBirthDate(),
             $entity->getResidence(),
+        );
+    }
+
+    public static function getPatientRepositoryCreateDtoDtoFromArrayRequest(
+        array $request
+    ): PatientRepositoryCreateDto {
+        return new PatientRepositoryCreateDto(
+            Arr::get($request, 'snils'),
+            null,
+            Arr::get($request, 'firstName'),
+            Arr::get($request, 'lastName'),
+            Arr::get($request, 'middleName'),
+            !is_null(Arr::get($request, 'birthDate'))
+                ? DateTime::createFromFormat(DATE_ATOM, Arr::get($request, 'birthDate'))
+                : null,
+            Arr::get($request, 'residence'),
         );
     }
 }

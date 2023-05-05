@@ -4,8 +4,9 @@ namespace App\Dto\Patient\Repository;
 
 use DateTimeInterface;
 use Ramsey\Uuid\UuidInterface;
+use Spatie\LaravelData\Data;
 
-class PatientRepositoryCreateDto
+class PatientRepositoryCreateDto extends Data
 {
     public function __construct(
         public string $snils,
