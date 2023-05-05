@@ -1,64 +1,267 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# hospital-api
+Тестовое задание для ООО Медицинские Информационные Решения
++ [Задание для разработчика](#Task);
++ [Разворачиваем проект на локальной машине](#Instruction);
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+```
+# <a name="Task"></a> Задание для разработчика:
 
-## About Laravel
+Имеется две основные модели: врач и пациент
+Задача:
+1) Реализовать метод API создания пациента с валидацией всех полей.
+2) Реализовать метод API создания врача с валидацией всех полей.
+3) Реализовать метод API записи пациента к врачу. Запись осуществляется на определенную дату и время. Время приема -  30 минут. Записи не должны пересекаться  по времени и выходить за рамки рабочего дня врача.
+4) Реализовать метод API получения списка записей к врачу с фильтрацией по полям: ФИО врача, ФИО пациента и интервалу дат записи. Добавить сортировку по дате и времени записи на прием. Также необходимо реализовать пагинацию  - 10 записей на странице.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Описание моделей:
+1) Врач
+обязательные поля:
+- Фамилия
+- Имя
+- Телефон
+- Время начала рабочего дня
+- Время окончания рабочего дня
+Необязательные поля:
+- Дата рождения
+- Отчество
+- email
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2) Пациент
+Обязательно заполнение хотя бы одного из полей:
+- Фамилия
+- Имя
+- Отчество
+Обязательное поле
+- СНИЛС
+Необязательные поля:
+- Дата рождения
+- Место жительства
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+В качестве БД использовать PostgreSQL.  Фреймворк laravel версии 8.
+Для backend разработчика необходимо покрыть все API unit тестами. Тесты должны создать как минимум 30 записей к врачу.  
+Fullstack разработчик может заменить unit тесты на формы реализующие функционал описанных API. Реализация допускается только на VueJS 2 
 
-## Learning Laravel
+При проверке задания особое внимание будет уделяться валидации реквестов, аккуратности кода, корректной работе API и написанию тестов.
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# <a name="Instruction"></a> Разворачиваем проект на локальной машине.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+В данной инструкции мы рассмотрим шаги, необходимые для развертывания Laravel приложения в Docker контейнерах.
 
-## Laravel Sponsors
+## Шаг 1: Установка Docker и Docker Compose
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Перед началом работы необходимо установить Docker и Docker Compose. Убедитесь, что у вас установлены последние версии этих инструментов.
 
-### Premium Partners
+## Шаг 2: Конфигурация проекта
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Для того, чтобы наше приложение успешно запускалось в Docker, необходимо выполнить следующие шаги:
 
-## Contributing
+1. Скопируйте .env.example в .env в ту же директорию. При необходимости измените дефолтные настройки проекта.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Запустите файл `docker-compose.yml` в корневой директории проекта командой
+```
+docker compose up -d
+```
 
-## Code of Conduct
+3. Войдите в контейнер командой, установите зависимости композера и примените миграции
+```
+docker exec -it hospital-php bash
+composer install
+php artisan doctrine:migrations:migrate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Шаг 3: Api готов к работе.
 
-## Security Vulnerabilities
+Выполнить запросы можно через .http-файлы в директории `api`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Список доступных методов API:
 
-## License
+1. метод API создания пациента `/api/patients/create`
+```
+Спецификация входящих параметров
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "lastName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "middleName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "snils": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "residence": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "birthDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "oneOf": [
+    {
+      "required": ["firstName"]
+    },
+    {
+      "required": ["lastName"]
+    },
+    {
+      "required": ["middleName"]
+    }
+  ],
+  "required": ["snils"]
+}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Пояснения:
+firstName - необязательное строковое поле с максимальной длиной 255 символов, содержащее имя пациента. Должно быть указано, если отсутствует lastName и middleName.
+lastName - необязательное строковое поле с максимальной длиной 255 символов, содержащее фамилию пациента. Должно быть указано, если отсутствует firstName и middleName.
+middleName - необязательное строковое поле с максимальной длиной 255 символов, содержащее отчество пациента. Должно быть указано, если отсутствует firstName и lastName.
+snils - обязательное строковое поле с максимальной длиной 255 символов, содержащее СНИЛС пациента.
+residence - необязательное строковое поле с максимальной длиной 255 символов, содержащее место жительства пациента.
+birthDate - необязательное строковое поле, содержащее дату рождения пациента. Должно соответствовать формату DATE_ATOM (например, 2022-05-06T10:30:00+00:00).
+```
+
+2. метод API создания врача `/api/doctor/create`
+```
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "middleName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "lastName": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "workdayStart": {
+      "type": "string",
+      "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+    },
+    "workdayEnd": {
+      "type": "string",
+      "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+    },
+    "birthDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "email": {
+      "type": "string",
+      "maxLength": 255,
+      "format": "email"
+    }
+  },
+  "required": ["firstName", "lastName", "phone", "workdayStart", "workdayEnd", "email"]
+}
+
+Пояснения:
+firstName - обязательное строковое поле с максимальной длиной 255 символов, содержащее имя сотрудника.
+middleName - необязательное строковое поле с максимальной длиной 255 символов, содержащее отчество сотрудника.
+lastName - обязательное строковое поле с максимальной длиной 255 символов, содержащее фамилию сотрудника.
+phone - обязательное строковое поле с максимальной длиной 255 символов, содержащее номер телефона сотрудника.
+workdayStart - обязательное строковое поле, содержащее время начала рабочего дня сотрудника. Должно соответствовать формату H:i (например, 09:00).
+workdayEnd - обязательное строковое поле, содержащее время окончания рабочего дня сотрудника. Должно соответствовать формату H:i (например, 17:00).
+birthDate - необязательное строковое поле, содержащее дату рождения сотрудника. Должно соответствовать формату DATE_ATOM (например, 2022-05-06T10:30:00+00:00).
+email - обязательное строковое поле с максимальной длиной 255 символов, содержащее электронный адрес сотрудника. Должно соответствовать формату email.
+```
+
+1. метод API создания записи пациента к врачу `/api/appointment/create`
+```
+Спецификация входящих параметров
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "doctorId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "patientId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "startAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["doctorId", "patientId", "startAt"]
+}
+
+Пояснения:
+doctorId - обязательное строковое поле, содержащее UUID идентификатор врача.
+patientId - обязательное строковое поле, содержащее UUID идентификатор пациента.
+startAt - обязательное строковое поле, содержащее дату и время начала приема. Должно соответствовать формату DATE_ATOM (например, 2022-05-06T10:30:00+00:00).
+```
+
+4. метод API получения списка записей к врачу `/api/appointment/list`
+```
+Спецификация входящих параметров
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "doctorFullName": {
+      "type": "string",
+      "maxLength": 767
+    },
+    "patientFullName": {
+      "type": "string",
+      "maxLength": 767
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date",
+      "formatMinimum": {
+        "$data": "1/startDate"
+      }
+    },
+    "sortDirection": {
+      "type": "string",
+      "enum": ["asc", "desc"]
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "perPage": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    }
+  }
+}
+
+Пояснения:
+doctorFullName - необязательное строковое поле с максимальной длиной 767 символов, содержащее полное имя врача.
+patientFullName - необязательное строковое поле с максимальной длиной 767 символов, содержащее полное имя пациента.
+startDate - необязательное строковое поле, содержащее дату начала периода, который нужно выбрать.
+endDate - необязательное строковое поле, содержащее дату окончания периода, который нужно выбрать. Должно быть больше или равно полю startDate.
+sortDirection - необязательное строковое поле, содержащее направление сортировки результатов выборки. Может быть равно asc или desc.
+page - необязательное целочисленное поле, содержащее номер страницы, которую нужно выбрать. Должно быть больше или равно 1.
+perPage - необязательное целочисленное поле, содержащее количество элементов на странице. Должно быть от 1 до 100.
+```
