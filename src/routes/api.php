@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/patients', [PatientController::class, 'create'])->middleware('validatePatientData');
-Route::post('/patients', [PatientController::class, 'create'])->middleware('validatePatientData');
+Route::post('/patients/create', [PatientController::class, 'create'])->middleware('validatePatientData');
+Route::post('/appointment/create', [AppointmentController::class, 'create'])->middleware('validateAppointmentCreateRequest');

@@ -1,0 +1,8 @@
+POST {{host}}/api/appointment/create
+Content-Type: application/json
+
+{
+  "doctorId": "25ff2411-5af7-4bc2-97b3-33309b27fdb7",
+  "patientId": "304dd4fb-2f68-4896-a019-abca063bd681",
+  "startAt": "2005-08-15T15:52:01+00:00"
+}

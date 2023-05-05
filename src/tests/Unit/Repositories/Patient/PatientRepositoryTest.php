@@ -12,8 +12,6 @@ use Tests\TestCase;
 
 class PatientRepositoryTest extends TestCase
 {
-    use DatabaseTransactions;
-
     private PatientRepositoryContract $repository;
 
     protected function setUp(): void

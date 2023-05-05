@@ -9,7 +9,7 @@ use DateTime;
 use Faker\Factory;
 use Ramsey\Uuid\Uuid;
 
-class PatientFactory
+class PatientFactory extends AbstractFactory
 {
     public static function create(): PatientDto
     {

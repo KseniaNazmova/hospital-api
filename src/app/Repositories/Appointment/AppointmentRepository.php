@@ -11,6 +11,7 @@ use App\Entities\Patient\Patient;
 use App\Exceptions\ApiException;
 use App\Exceptions\ErrorCodes;
 use App\Transformers\AppointmentTransformer;
+use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\UuidInterface;
 
@@ -48,6 +49,45 @@ class AppointmentRepository extends EntityRepository implements AppointmentRepos
         $this->_em->flush();
 
         return AppointmentTransformer::dtoFromEntity($entity);
+    }
+
+    /** @return AppointmentDto[] */
+    public function list(
+        ?UuidInterface $doctorId = null,
+        ?UuidInterface $patientId = null,
+        ?DateTimeInterface $startFrom = null,
+        ?DateTimeInterface $startTo = null,
+    ): array {
+        $qb = $this->createQueryBuilder('Appointment');
+
+        if ($doctorId !== null) {
+            $qb->leftJoin('Appointment.doctor', 'Doctor')
+                ->andWhere('Doctor.id = :doctorId')
+                ->setParameter('doctorId', $doctorId);
+        }
+
+        if ($patientId !== null) {
+            $qb->leftJoin('Appointment.patient', 'Patient')
+                ->andWhere('Patient.id = :patientId')
+                ->setParameter('patientId', $patientId);
+        }
+
+        if ($startFrom !== null) {
+            $qb->andWhere('Appointment.startAt >= :startFrom')
+                ->setParameter('startFrom', $startFrom);
+        }
+
+        if ($startTo !== null) {
+            $qb->andWhere('Appointment.startAt <= :startTo')
+                ->setParameter('startTo', $startTo);
+        }
+
+        $list = $qb->getQuery()->getResult();
+
+        return array_map(
+            static fn(Appointment $appointment): AppointmentDto => AppointmentTransformer::dtoFromEntity($appointment),
+            $list
+        );
     }
 
     private function getEntityById(UuidInterface $id): ?Appointment

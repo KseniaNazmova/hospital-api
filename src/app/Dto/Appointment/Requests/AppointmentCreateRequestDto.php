@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Dto\Appointment\Repository;
+namespace App\Dto\Appointment\Requests;
 
 use DateTimeInterface;
 use Ramsey\Uuid\UuidInterface;
-use Spatie\LaravelData\Data;
 
-class AppointmentRepositoryCreateDto extends Data
+class AppointmentCreateRequestDto
 {
     public function __construct(
         public UuidInterface $doctorId,
         public UuidInterface $patientId,
         public DateTimeInterface $startAt,
-        public DateTimeInterface $finishAt,
-        public ?UuidInterface $id = null,
     ) {
     }
 }
