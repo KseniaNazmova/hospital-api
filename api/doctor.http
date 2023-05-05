@@ -1,0 +1,12 @@
+POST {{host}}/api/doctor/create
+Content-Type: application/json
+
+{
+  "firstName": "Johny",
+  "lastName": "Silverhand",
+  "phone": "+79993331122",
+  "workdayStart": "09:00",
+  "workdayEnd": "18:00",
+  "birthDate": "2023-08-15T15:52:01+00:00",
+  "email": "john@mail.com"
+}

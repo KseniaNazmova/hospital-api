@@ -25,7 +25,7 @@ class PatientTransformer
         );
     }
 
-    public static function getPatientRepositoryCreateDtoDtoFromArrayRequest(
+    public static function getPatientRepositoryCreateDtoFromArrayRequest(
         array $request
     ): PatientRepositoryCreateDto {
         return new PatientRepositoryCreateDto(
