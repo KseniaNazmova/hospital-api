@@ -8,6 +8,7 @@ use App\Dto\Appointment\Repository\AppointmentRepositoryCreateDto;
 use App\Entities\Appointment\Appointment;
 use App\Entities\Doctor\Doctor;
 use App\Entities\Patient\Patient;
+use App\Enums\SortDirectionEnum;
 use App\Exceptions\ApiException;
 use App\Exceptions\ErrorCodes;
 use App\Transformers\AppointmentTransformer;
@@ -57,6 +58,9 @@ class AppointmentRepository extends EntityRepository implements AppointmentRepos
         ?UuidInterface $patientId = null,
         ?DateTimeInterface $startFrom = null,
         ?DateTimeInterface $startTo = null,
+        ?int $page = null,
+        ?int $perPage = null,
+        ?SortDirectionEnum $sort = SortDirectionEnum::DESC,
     ): array {
         $qb = $this->createQueryBuilder('Appointment');
 
@@ -81,6 +85,13 @@ class AppointmentRepository extends EntityRepository implements AppointmentRepos
             $qb->andWhere('Appointment.startAt <= :startTo')
                 ->setParameter('startTo', $startTo);
         }
+
+        if (!is_null($page) && !is_null($perPage)) {
+            $qb->setFirstResult($perPage * ($page - 1))
+                ->setMaxResults($perPage);
+        }
+
+        $qb->orderBy('Appointment.startAt', $sort->value);
 
         $list = $qb->getQuery()->getResult();
 

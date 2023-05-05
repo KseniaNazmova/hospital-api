@@ -6,7 +6,6 @@ use App\Contracts\Repositories\PatientRepositoryContract;
 use App\Dto\Patient\Repository\PatientDto;
 use App\Dto\Patient\Repository\PatientRepositoryCreateDto;
 use Database\Factories\PatientFactory;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
@@ -53,6 +52,26 @@ class PatientRepositoryTest extends TestCase
         $this->assertInstanceOf(PatientDto::class, $dto);
         $this->assertEquals($createDto->id, $dto->id);
         $this->assertNonGeneratedProperties($createDto, $dto);
+    }
+
+    public function testGetByFullName(): void
+    {
+        $patientDto = PatientFactory::create();
+
+        $fullName = "";
+
+        foreach (['lastName', 'firstName', 'middleName'] as $prop) {
+            if (!is_null($patientDto->$prop)) {
+                $fullName .= $patientDto->$prop . " ";
+            }
+        }
+
+        $foundPatient = $this->repository->getByFullName(trim($fullName));
+
+        // assert that the method returns the correct patient DTO
+        $this->assertEquals($patientDto->lastName, $foundPatient->lastName);
+        $this->assertEquals($patientDto->firstName, $foundPatient->firstName);
+        $this->assertEquals($patientDto->middleName, $foundPatient->middleName);
     }
 
     /**

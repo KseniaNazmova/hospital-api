@@ -50,6 +50,23 @@ class PatientRepository extends EntityRepository implements PatientRepositoryCon
         return PatientTransformer::dtoFromEntity($entity);
     }
 
+    public function getByFullName(string $fullName): ?PatientDto
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        $queryBuilder
+            ->where(
+                "CONCAT(p.lastName, ' ', p.firstName, ' ', p.middleName) like :fullName"
+            )
+            ->setParameter('fullName', "%$fullName%")
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults(1);
+
+        $entity = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $entity ? PatientTransformer::dtoFromEntity($entity) : null;
+    }
+
     private function getEntityById(UuidInterface $id): ?Patient
     {
         return $this->find($id->toString());

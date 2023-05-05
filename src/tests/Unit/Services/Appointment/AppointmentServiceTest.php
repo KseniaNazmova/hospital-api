@@ -5,6 +5,7 @@ namespace tests\Unit\Repositories\Appointment;
 use App\Contracts\Repositories\AppointmentRepositoryContract;
 use App\Contracts\Repositories\DoctorRepositoryContract;
 use App\Contracts\Repositories\PatientRepositoryContract;
+use App\Dto\Appointment\AppointmentListFilterDto;
 use App\Dto\Appointment\Repository\AppointmentDto;
 use App\Dto\Appointment\Repository\AppointmentRepositoryCreateDto;
 use App\Dto\Appointment\Requests\AppointmentCreateRequestDto;
@@ -96,5 +97,47 @@ class AppointmentServiceTest extends TestCase
 
         // Проверка, что результатом является объект AppointmentDto
         $this->assertInstanceOf(AppointmentDto::class, $result);
+    }
+
+    public function testList()
+    {
+        $listRequestDto = new AppointmentListFilterDto();
+        $listRequestDto->doctorFullName = "John Doe";
+        $listRequestDto->patientFullName = "Jane Smith";
+
+        $this->doctorRepository->shouldReceive('getByFullName')
+            ->andReturn(DoctorFactory::generateDoctorDto());
+
+        $this->patientRepository->shouldReceive('getByFullName')
+            ->andReturn(PatientFactory::generatePatientDto());
+
+        $mockedAppointmentList = [];
+        for ($i = 0; $i < random_int(30, 40); $i++) {
+            $mockedAppointmentList[] = AppointmentFactory::generateAppointmentDto();
+        }
+
+        $this->appointmentRepository->shouldReceive('list')
+            ->andReturn($mockedAppointmentList);
+
+        $appointmentService = new AppointmentService(
+            $this->appointmentRepository,
+            $this->patientRepository,
+            $this->doctorRepository,
+        );
+
+        $actualListResponseDto = $appointmentService->list($listRequestDto);
+
+        $this->assertCount(count($mockedAppointmentList), $actualListResponseDto->list);
+
+        $this->assertEquals(
+            $listRequestDto->patientFullName,
+            $actualListResponseDto->filterDto->patientFullName
+        );
+        $this->assertEquals(
+            $listRequestDto->doctorFullName,
+            $actualListResponseDto->filterDto->doctorFullName
+        );
+        $this->assertNotNull($actualListResponseDto->filterDto->page);
+        $this->assertNotNull($actualListResponseDto->filterDto->perPage);
     }
 }

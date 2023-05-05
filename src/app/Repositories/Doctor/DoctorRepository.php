@@ -39,12 +39,12 @@ class DoctorRepository extends EntityRepository implements DoctorRepositoryContr
         }
 
         $entity->setFirstName($createDto->firstName);
+        $entity->setMiddleName($createDto->middleName);
         $entity->setLastName($createDto->lastName);
         $entity->setPhone($createDto->phone);
         $entity->setWorkdayStart($createDto->workdayStart);
         $entity->setWorkdayEnd($createDto->workdayEnd);
         $entity->setBirthDate($createDto->birthDate);
-        $entity->setMiddleName($createDto->middleName);
         $entity->setEmail($createDto->email);
 
         $this->_em->flush();
@@ -55,5 +55,19 @@ class DoctorRepository extends EntityRepository implements DoctorRepositoryContr
     private function getEntityById(UuidInterface $id): ?Doctor
     {
         return $this->find($id->toString());
+    }
+
+    public function getByFullName(string $fullName): ?DoctorDto
+    {
+        $queryBuilder = $this->createQueryBuilder('d');
+
+        $queryBuilder
+            ->where("TRIM(CONCAT(d.lastName, ' ', d.firstName, ' ', d.middleName)) LIKE :fullName")
+            ->setParameter('fullName', "%$fullName%")
+            ->setMaxResults(1);
+
+        $entity = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $entity ? DoctorTransformer::dtoFromEntity($entity) : null;
     }
 }

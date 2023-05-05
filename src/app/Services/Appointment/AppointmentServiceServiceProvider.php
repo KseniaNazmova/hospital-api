@@ -2,7 +2,7 @@
 
 namespace App\Services\Appointment;
 
-use app\Contracts\Services\AppointmentServiceContract;
+use App\Contracts\Services\AppointmentServiceContract;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 

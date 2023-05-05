@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::post('/patients/create', [PatientController::class, 'create'])->middleware('validatePatientData');
 Route::post('/doctor/create', [\App\Http\Controllers\DoctorController::class, 'create'])->middleware('validateDoctorData');
 Route::post('/appointment/create', [AppointmentController::class, 'create'])->middleware('validateAppointmentCreateRequest');
+Route::post('/appointment/list', [AppointmentController::class, 'list'])->middleware('validateAppointmentListRequest');

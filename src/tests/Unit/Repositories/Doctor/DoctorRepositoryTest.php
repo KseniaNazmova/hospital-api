@@ -57,6 +57,20 @@ class DoctorRepositoryTest extends TestCase
         $this->assertNonGeneratedProperties($createDto, $dto);
     }
 
+    public function testGetByFullName(): void
+    {
+        $doctorDto = DoctorFactory::create();
+
+        $foundDoctor = $this->repository->getByFullName(
+            "$doctorDto->lastName $doctorDto->firstName $doctorDto->middleName"
+        );
+
+        // assert that the method returns the correct doctor DTO
+        $this->assertEquals($doctorDto->lastName, $foundDoctor->lastName);
+        $this->assertEquals($doctorDto->firstName, $foundDoctor->firstName);
+        $this->assertEquals($doctorDto->middleName, $foundDoctor->middleName);
+    }
+
     /**
      * @param DoctorRepositoryCreateDto $createDto
      * @param DoctorDto $dto

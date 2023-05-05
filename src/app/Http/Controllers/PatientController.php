@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Repositories\PatientRepositoryContract;
 use App\Transformers\PatientTransformer;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -17,7 +18,7 @@ class PatientController extends BaseController
     ) {
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $requestData = $request->toArray();
         $createDto = PatientTransformer::getPatientRepositoryCreateDtoFromArrayRequest($requestData);

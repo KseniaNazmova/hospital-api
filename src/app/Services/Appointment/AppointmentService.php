@@ -6,9 +6,13 @@ use App\Contracts\Repositories\AppointmentRepositoryContract;
 use App\Contracts\Repositories\DoctorRepositoryContract;
 use App\Contracts\Repositories\PatientRepositoryContract;
 use App\Contracts\Services\AppointmentServiceContract;
+use App\Dto\Appointment\AppointmentListFilterDto;
 use App\Dto\Appointment\Repository\AppointmentDto;
 use App\Dto\Appointment\Repository\AppointmentRepositoryCreateDto;
 use App\Dto\Appointment\Requests\AppointmentCreateRequestDto;
+use App\Dto\Appointment\Responses\AppointmentListResponseDto;
+use App\Enums\AppointmentListSortByEnum;
+use App\Enums\SortDirectionEnum;
 use App\Exceptions\ApiException;
 use App\Exceptions\ErrorCodes;
 use Carbon\Carbon;
@@ -31,7 +35,7 @@ class AppointmentService implements AppointmentServiceContract
         // Получаем доктора
         $doctor = $this->doctorRepository->getById($request->doctorId);
 
-        // Убедимся что пициент существует
+        // Убедимся что пациент существует
         $this->patientRepository->getById($request->patientId);
 
         // убедимся что запись не выходит за рамки дня врача
@@ -82,5 +86,52 @@ class AppointmentService implements AppointmentServiceContract
                 finishAt: $finishAt,
             )
         );
+    }
+
+    public function list(AppointmentListFilterDto $listRequestDto): AppointmentListResponseDto
+    {
+        $filterDto = $this->getFilterFromRequest($listRequestDto);
+
+        $doctorId = !is_null($listRequestDto->doctorFullName) ?
+            $this->doctorRepository->getByFullName($listRequestDto->doctorFullName)?->id
+            : null;
+
+        $patientId = !is_null($listRequestDto->patientFullName) ?
+            $this->patientRepository->getByFullName($listRequestDto->patientFullName)?->id
+            : null;
+
+        $list = $this->appointmentRepository->list(
+            $doctorId,
+            $patientId,
+            $filterDto->startDate,
+            $filterDto->endDate,
+            $filterDto->page,
+            $filterDto->perPage,
+            $filterDto->sortDirection,
+        );
+
+        return new AppointmentListResponseDto(
+            $list,
+            $filterDto,
+        );
+    }
+
+    private function getFilterFromRequest(AppointmentListFilterDto $listRequestDto): AppointmentListFilterDto
+    {
+        $filterDto = AppointmentListFilterDto::from($listRequestDto);
+
+        if (is_null($filterDto->sortDirection)) {
+            $filterDto->sortDirection = SortDirectionEnum::DESC;
+        }
+
+        if (is_null($filterDto->page)) {
+            $filterDto->page = 1;
+        }
+
+        if (is_null($filterDto->perPage)) {
+            $filterDto->perPage = env("PER_PAGE_DEFAULT", 10);
+        }
+
+        return $filterDto;
     }
 }

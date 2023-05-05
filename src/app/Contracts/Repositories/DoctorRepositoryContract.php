@@ -11,6 +11,6 @@ interface DoctorRepositoryContract
     public function getById(UuidInterface $id): DoctorDto;
 
     public function create(DoctorRepositoryCreateDto $createDto): DoctorDto;
+
+    public function getByFullName(string $fullName): ?DoctorDto;
 }
-
-

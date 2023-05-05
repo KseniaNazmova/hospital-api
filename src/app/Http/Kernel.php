@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'validatePatientData' => \App\Http\Middleware\ValidatePatientData::class,
         'validateDoctorData' => \App\Http\Middleware\ValidateDoctorData::class,
         'validateAppointmentCreateRequest' => \App\Http\Middleware\ValidateAppointmentCreateRequest::class,
+        'validateAppointmentListRequest' => \App\Http\Middleware\ValidateAppointmentListRequest::class,
     ];
 }

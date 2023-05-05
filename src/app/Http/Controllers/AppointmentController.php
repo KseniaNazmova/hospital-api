@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use app\Contracts\Services\AppointmentServiceContract;
+use App\Contracts\Services\AppointmentServiceContract;
 use App\Transformers\AppointmentTransformer;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -17,7 +18,7 @@ class AppointmentController extends BaseController
     ) {
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $requestData = $request->toArray();
         $createDto = AppointmentTransformer::getAppointmentCreateRequestDtoFromArrayRequest($requestData);
@@ -28,6 +29,21 @@ class AppointmentController extends BaseController
             'status' => 'success',
             'message' => 'Appointment created successfully',
             'appointment' => $patient,
+        ], 200, ['Content-Type => application/json']);
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        $requestData = $request->toArray();
+        $listRequestDto = AppointmentTransformer::getAppointmentListRequestDtoFromArrayRequest($requestData);
+
+        $result = $this->appointmentService->list($listRequestDto);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Appointments Page #' . $result->filterDto->page,
+            'appointments' => $result->list,
+            'filter' => $result->filterDto,
         ], 200, ['Content-Type => application/json']);
     }
 }

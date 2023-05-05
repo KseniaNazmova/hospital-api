@@ -4,6 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Dto\Appointment\Repository\AppointmentDto;
 use App\Dto\Appointment\Repository\AppointmentRepositoryCreateDto;
+use App\Enums\SortDirectionEnum;
 use DateTimeInterface;
 use Ramsey\Uuid\UuidInterface;
 
@@ -19,5 +20,8 @@ interface AppointmentRepositoryContract
         ?UuidInterface $patientId = null,
         ?DateTimeInterface $startFrom = null,
         ?DateTimeInterface $startTo = null,
+        ?int $page = null,
+        ?int $perPage = null,
+        ?SortDirectionEnum $sort = SortDirectionEnum::DESC,
     ): array;
 }
